@@ -1,44 +1,57 @@
-local RANGES = {
-    explorer = "(376-398)",
-    adventurer = "(389-411)",
-    veteran = "(402-424)",
-    champion = "(415-437)",
-    hero = "(428-441)",
-}
-
 local UPGRADE_CLASS_START = string.find(ITEM_UPGRADE_TOOLTIP_FORMAT_STRING, "%%s")
 local UPGRADE_LEVEL = strsub(ITEM_UPGRADE_TOOLTIP_FORMAT_STRING, 1, UPGRADE_CLASS_START - 1)
 
 local function OnTooltipSetItem(tooltip, tooltipData)
-    local itemName, itemLink = TooltipUtil.GetDisplayedItem(tooltip)
+    local _, itemLink = TooltipUtil.GetDisplayedItem(tooltip)
     if not itemLink or not tooltipData then
         return
     end
 
-    local itemType = select(6, GetItemInfo(itemLink))
-    if itemType ~= ARMOR and itemType ~= WEAPON then
+    local itemClass = select(12, GetItemInfo(itemLink))
+    if itemClass ~= Enum.ItemClass.Armor and itemClass ~= Enum.ItemClass.Weapon then
         return
     end
 
-    local upgradeLine = 3
-    local upgradeText = tooltipData.lines[upgradeLine].leftText
-    local upgradeTextLength = strlen(upgradeText)
-
-    while(upgradeTextLength < UPGRADE_CLASS_START + 4 or strsub(upgradeText, 1, UPGRADE_CLASS_START - 1) ~= UPGRADE_LEVEL) do
-        if upgradeLine > 5 then
-            return
-        end
-
-        upgradeLine = upgradeLine + 1
-        upgradeText = tooltipData.lines[upgradeLine].leftText
-        upgradeTextLength = strlen(upgradeText)
+    local itemString = { strsplit(":", string.match(itemLink, "item[%-?%d:]+")) }
+    local numberOfBonusIds = tonumber(itemString[14]) or 0
+    if numberOfBonusIds == 0 then
+        return
     end
 
-    local upgradeClass = strlower(strsub(upgradeText, UPGRADE_CLASS_START, upgradeTextLength - 4));
-    local range = RANGES[upgradeClass];
+    local range = false
+    for i=15,15+numberOfBonusIds do
+        local bonusId = tonumber(itemString[i])
+        if bonusId then
+            if bonusId >= 9294 and bonusId <= 9301 then
+                range = "(376-398)"
+                break
+            elseif bonusId >= 9302 and bonusId <= 9309 then
+                range = "(389-411)"
+                break
+            elseif bonusId >= 9313 and bonusId <= 9320 then
+                range = "(402-424)"
+                break
+            elseif bonusId >= 9321 and bonusId <= 9329 then
+                range = "(415-437)"
+                break
+            elseif bonusId >= 9330 and bonusId <= 9334 then
+                range = "(428-441)"
+                break
+            end
+        end
+    end
+
     if range then
-        tooltipData.lines[upgradeLine - 1].rightColor = DISABLED_FONT_COLOR
-        tooltipData.lines[upgradeLine - 1].rightText = range
+        local itemLevelLine = 2
+        for tooltipLine=3,4 do
+            if string.match(tooltipData.lines[tooltipLine].leftText, "^" .. UPGRADE_LEVEL) then
+                itemLevelLine = tooltipLine - 1
+                break
+            end
+        end
+
+        tooltipData.lines[itemLevelLine].rightColor = DISABLED_FONT_COLOR
+        tooltipData.lines[itemLevelLine].rightText = range
     end
 end
 
