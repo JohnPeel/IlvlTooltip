@@ -4,6 +4,7 @@ local RANGES = {
     veteran = "(402-424)",
     champion = "(415-437)",
     hero = "(428-441)",
+    myth = "(441-447)",
 }
 
 local UPGRADE_CLASS_START = string.find(ITEM_UPGRADE_TOOLTIP_FORMAT_STRING, "%%s")
@@ -11,7 +12,7 @@ local UPGRADE_LEVEL = strsub(ITEM_UPGRADE_TOOLTIP_FORMAT_STRING, 1, UPGRADE_CLAS
 
 local function OnTooltipSetItem(tooltip, tooltipData)
     local itemName, itemLink = TooltipUtil.GetDisplayedItem(tooltip)
-    if not itemLink or not tooltipData then
+    if itemLink == nil or tooltipData == nil or tooltipData.lines == nil then
         return
     end
 
@@ -21,6 +22,13 @@ local function OnTooltipSetItem(tooltip, tooltipData)
     end
 
     local upgradeLine = 3
+    while (tooltipData.lines[upgradeLine] == nil) do
+        upgradeLine = upgradeLine + 1
+        if upgradeLine > 5 then
+            return
+        end
+    end
+
     local upgradeText = tooltipData.lines[upgradeLine].leftText
     local upgradeTextLength = strlen(upgradeText)
 
@@ -30,6 +38,13 @@ local function OnTooltipSetItem(tooltip, tooltipData)
         end
 
         upgradeLine = upgradeLine + 1
+        while (tooltipData.lines[upgradeLine] == nil) do
+            upgradeLine = upgradeLine + 1
+            if upgradeLine > 5 then
+                return
+            end
+        end
+
         upgradeText = tooltipData.lines[upgradeLine].leftText
         upgradeTextLength = strlen(upgradeText)
     end
