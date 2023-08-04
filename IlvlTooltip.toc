@@ -1,4 +1,4 @@
-## Interface: 100100
+## Interface: 100105
 ## Title: Ilvl Tooltip
 ## Notes: Adds item level range to gear piece's tooltip.
 ## Author: Dgby
