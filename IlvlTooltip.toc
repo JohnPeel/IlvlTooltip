@@ -2,7 +2,7 @@
 ## Title: Ilvl Tooltip
 ## Notes: Adds item level range to gear piece's tooltip.
 ## Author: Dgby
-## Version: 0.1.3
+## Version: 0.1.4
 ## X-Curse-Project-ID: 860758
 ## X-Wago-ID: rNkPPm6a
 
