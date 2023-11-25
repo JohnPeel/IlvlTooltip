@@ -1,10 +1,10 @@
 local RANGES = {
-    explorer = "(376-398)",
-    adventurer = "(389-411)",
-    veteran = "(402-424)",
-    champion = "(415-437)",
-    hero = "(428-441)",
-    myth = "(441-447)",
+    explorer = "(415-437)",
+    adventurer = "(428-450)",
+    veteran = "(441-463)",
+    champion = "(454-476)",
+    hero = "(467-483)",
+    myth = "(480-489)",
 }
 
 local UPGRADE_CLASS_START = string.find(ITEM_UPGRADE_TOOLTIP_FORMAT_STRING, "%%s")
